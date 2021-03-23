@@ -1,9 +1,33 @@
 #!/usr/bin/env python
 # coding: utf-8
+# %%
+# MIT License
+
+# Copyright (c) 2021 HZ-MS-CSA
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+# %%
 
 # ### Model Scoring
 
-# In[ ]:
+# %%
 
 
 import json
@@ -18,7 +42,7 @@ from azureml.core.workspace import Workspace
 from azureml.core.model import Model
 
 
-# In[ ]:
+# %%
 
 
 # Use Service Principal
@@ -34,7 +58,7 @@ ws = Workspace.get(name=os.environ['WORKSPACE_NAME'],
                   resource_group=os.environ['RESOURCE_GROUP'])
 
 
-# In[ ]:
+# %%
 
 
 def score(raw_data, model_name):
@@ -54,7 +78,7 @@ def score(raw_data, model_name):
 
 # ### API
 
-# In[ ]:
+# %%
 
 
 from flask import Flask
@@ -64,7 +88,7 @@ app = Flask(__name__)
 api = Api(app)
 
 
-# In[ ]:
+# %%
 
 
 parser = reqparse.RequestParser()
@@ -72,7 +96,7 @@ parser.add_argument('data', location='json')
 parser.add_argument('model_name', required=True)
 
 
-# In[ ]:
+# %%
 
 
 class Score(Resource):
@@ -88,7 +112,7 @@ class Score(Resource):
         return results, 200  # return data with 200 OK
 
 
-# In[ ]:
+# %%
 
 
 class HealthCheck(Resource):
@@ -97,21 +121,21 @@ class HealthCheck(Resource):
         return {'HealthStatus':'Okay', 'WorkspaceDetails': details}, 200
 
 
-# In[ ]:
+# %%
 
 
 api.add_resource(Score, '/score')
 api.add_resource(HealthCheck, '/healthcheck')
 
 
-# In[ ]:
+# %%
 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=80)
 
 
-# In[ ]:
+# %%
 
 
 
