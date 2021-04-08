@@ -34,11 +34,12 @@ dependencies:
 - pip
 
 - pip:
+  - pyyaml
   - azureml-defaults
   - azureml-core
   - azureml-telemetry
   - flask
   - flask_restful
-  - pandas==0.25.3
+  - pandas
 channels:
 - anaconda
