@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
-# %%
+
+# In[ ]:
+
+
 # MIT License
 
 # Copyright (c) 2021 HZ-MS-CSA
@@ -23,30 +26,29 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-# %%
 
 # ### Model Scoring
 
-# %%
+# In[ ]:
 
 
 import json
-import numpy as np
 import pandas as pd
 import os
 import pickle
 import joblib
 import os
-from sklearn.linear_model import LogisticRegression
 from azureml.core.workspace import Workspace
 from azureml.core.model import Model
+from azureml.core.authentication import ServicePrincipalAuthentication
+from flask import Flask
+from flask_restful import Resource, Api, reqparse
 
 
-# %%
+# In[ ]:
 
 
 # Use Service Principal
-from azureml.core.authentication import ServicePrincipalAuthentication
 
 sp = ServicePrincipalAuthentication(tenant_id=os.environ['TENANT_ID'], # tenantID
                                     service_principal_id=os.environ['CLIENT_ID'], # clientId
@@ -58,7 +60,7 @@ ws = Workspace.get(name=os.environ['WORKSPACE_NAME'],
                   resource_group=os.environ['RESOURCE_GROUP'])
 
 
-# %%
+# In[ ]:
 
 
 def score(raw_data, model_name):
@@ -78,17 +80,14 @@ def score(raw_data, model_name):
 
 # ### API
 
-# %%
+# In[ ]:
 
 
-from flask import Flask
-from flask_restful import Resource, Api, reqparse
-import pandas as pd
 app = Flask(__name__)
 api = Api(app)
 
 
-# %%
+# In[ ]:
 
 
 parser = reqparse.RequestParser()
@@ -96,7 +95,7 @@ parser.add_argument('data', location='json')
 parser.add_argument('model_name', required=True)
 
 
-# %%
+# In[ ]:
 
 
 class Score(Resource):
@@ -112,7 +111,7 @@ class Score(Resource):
         return results, 200  # return data with 200 OK
 
 
-# %%
+# In[ ]:
 
 
 class HealthCheck(Resource):
@@ -121,21 +120,21 @@ class HealthCheck(Resource):
         return {'HealthStatus':'Okay', 'WorkspaceDetails': details}, 200
 
 
-# %%
+# In[ ]:
 
 
 api.add_resource(Score, '/score')
 api.add_resource(HealthCheck, '/healthcheck')
 
 
-# %%
+# In[ ]:
 
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
 
 
-# %%
+# In[ ]:
 
 
 
