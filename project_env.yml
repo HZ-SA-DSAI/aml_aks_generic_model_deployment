@@ -34,13 +34,11 @@ dependencies:
 - pip
 
 - pip:
-  - sklearn-pandas
   - azureml-defaults
   - azureml-core
   - azureml-telemetry
   - flask
   - flask_restful
-- scikit-learn==0.22.2.post1
-- pandas==0.25.3
+  - pandas==0.25.3
 channels:
 - anaconda
