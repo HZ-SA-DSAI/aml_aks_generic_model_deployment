@@ -34,11 +34,8 @@ dependencies:
 - pip
 
 - pip:
-  - pyyaml
   - scikit-learn
-  - azureml-defaults
   - azureml-core
-  - azureml-telemetry
   - flask
   - flask_restful
   - pandas
