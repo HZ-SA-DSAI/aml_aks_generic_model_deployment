@@ -35,6 +35,7 @@ dependencies:
 
 - pip:
   - pyyaml
+  - scikit-learn
   - azureml-defaults
   - azureml-core
   - azureml-telemetry
