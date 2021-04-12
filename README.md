@@ -47,6 +47,46 @@ SOFTWARE.
     3. params = {'model_name': MODEL_NAME}
     
 
+
+# Step by Step Instructions
+
+
+## Set up Azure Devops Project
+
+
+1. Go to [Azure Devops website](https://azure.microsoft.com/en-us/services/devops/?nav=min), and set up a project named **AML_AKS_custom_deployment** (Substitute any name as you see fit.)
+
+
+## Set up Project
+
+
+1. Go to Repos on the left side, and find **Import** under **Import a repository**
+
+![](media/1.png)
+
+2. Use https://github.com/HZ-MS-CSA/aml_aks_generic_model_deployment as clone URL
+
+
+## Upload AML Model
+
+
+1. As a demonstration, we will be using an onnx model from a Microsoft Cloud Workshop activity. 
+    1. "This is a classification model for claim text that will predict `1` if the claim is an auto insurance claim or `0` if it is a home insurance claim. The model will be built using a type of Deep Neural Network (DNN) called the Long Short-Term Memory (LSTM) recurrent neural network using TensorFlow via the Keras library.". [Source here.](https://github.com/microsoft/MCW-Cognitive-services-and-deep-learning/blob/main/Hands-on%20lab/notebooks/03%20Claim%20Classification.ipynb)
+    2. For step by step guidance on how to create and train this model, please see the [MCW workshop here.](https://github.com/microsoft/MCW-Cognitive-services-and-deep-learning) 
+    3. For your convenience, you can find the onnx model under sample_model/claim_classifer.zip
+    4. Download and unzip the file, and upload the onnx model to Azure ML workspace
+    
+    ![](media/2.png)
+
+
+## Modify Azure Devops Repo Content
+
+
+There are two files that need to be modified to accommodate the onnx model
+
+1. **./main-generic.py**: This is essentially a scoring entry script that calls AML SDK, retrieve the model from the registry, and wrap it in a flask API. The original main-generic.py is a template, and you can add any relevant codes to execute the model in this file. Please replace the content of this file with **./sample_model/main-generic.py** (An example of how to customize this python script)
+2. **./project_env.yml**: This specifies the dependencies required for the model to execute. Please replace the content of this file with **./sample_model/project_env.yml** (An example of how to customize this yml file)
+
 ```python
 
 ```
