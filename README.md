@@ -45,7 +45,21 @@ SOFTWARE.
     1. Body is set to json string with the following structure: {'data': RAW_DATA}
     2. headers = {'Content-Type':'application/json'}
     3. params = {'model_name': MODEL_NAME}
-    
+
+
+# Overview
+
+
+This solution template is meant to provide an alternative option to deploy machine learning models registered in AML workspace to AKS clusters. This helps enable the following use cases:
+
+1. Enable multi-region deployment
+2. More flexibility in endpoint configuration and management
+3. Model agnostic--one endpoint can invoke several models, providing the required environment is built beforehand. One environment can be reused across several models
+4. Controlled roll out of model inference deployment
+5. Enable higher automation across various AML workspaces for CI/CD purposes
+6. The solution can be customized to retrieve models directly from Azure storage, without invoking AML workspace at all, providing further flexibility
+7. The solution can be modified to include use cases beyond model inferencing. Data engineering via AKS endpoint without any specified model is also possible. 
+
 
 
 # Step by Step Instructions
@@ -163,13 +177,9 @@ There are two files that need to be modified to accommodate the onnx model
     3. `az aks get-credentials --resource-group RESOURCE_GROUP_NAME --name AKS_CLUSTER_NAME`
     4. `kubectl get deployments --all-namespaces=true`
     5. Find the `aml-aks-onnx` namespace, make sure it's ready
-    6. `kubectl get deployments --namespace aml-aks-onnx`. External IP will be listed there
+    6. `kubectl get svc --namespace aml-aks-onnx`. External IP will be listed there
 2. Use [test.ipynb](test.ipynb) to test it out
     1. endpoint is `http://EXTERNAL_IP:80/score`. You can optionally set it to be `http://EXTERNAL_IP:80/healthcheck` and then use the get method to do a quick health check
     2. In the post method section, make sure to enter the model name. In this demo, the model name is claim_classifier_onnx_demo. Enter any potential insurance claim text, and see the model classifies it into auto or home insurance claim in real time. 
     ![](media/19.png)
     ![](media/20.png)
-
-```python
-
-```
