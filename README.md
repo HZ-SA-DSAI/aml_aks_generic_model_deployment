@@ -22,6 +22,27 @@ SOFTWARE.
 
 
 
+# Overview
+
+
+Contributor: 
+
+[Han Zhang (Microsoft Data & AI Cloud Solution Architect)](https://www.linkedin.com/in/han-zhang-csa-msft/)
+
+[Ganesh Radhakrishnan (Microsoft Senior App & Infra Cloud Solution Architect)](https://www.linkedin.com/in/ganesh-radhakrishnan-11217329/)
+
+
+This solution template is meant to provide an alternative option to deploy machine learning models registered in AML workspace to AKS clusters. This helps enable the following use cases:
+
+1. Enable multi-region deployment
+2. More flexibility in endpoint configuration and management
+3. Model agnostic--one endpoint can invoke several models, providing the required environment is built beforehand. One environment can be reused across several models
+4. Controlled roll out of model inference deployment
+5. Enable higher automation across various AML workspaces for CI/CD purposes
+6. The solution can be customized to retrieve models directly from Azure storage, without invoking AML workspace at all, providing further flexibility
+7. The solution can be modified to include use cases beyond model inferencing. Data engineering via AKS endpoint without any specified model is also possible. 
+
+
 # aml_model_aks_custom
 
 
@@ -45,20 +66,6 @@ SOFTWARE.
     1. Body is set to json string with the following structure: {'data': RAW_DATA}
     2. headers = {'Content-Type':'application/json'}
     3. params = {'model_name': MODEL_NAME}
-
-
-# Overview
-
-
-This solution template is meant to provide an alternative option to deploy machine learning models registered in AML workspace to AKS clusters. This helps enable the following use cases:
-
-1. Enable multi-region deployment
-2. More flexibility in endpoint configuration and management
-3. Model agnostic--one endpoint can invoke several models, providing the required environment is built beforehand. One environment can be reused across several models
-4. Controlled roll out of model inference deployment
-5. Enable higher automation across various AML workspaces for CI/CD purposes
-6. The solution can be customized to retrieve models directly from Azure storage, without invoking AML workspace at all, providing further flexibility
-7. The solution can be modified to include use cases beyond model inferencing. Data engineering via AKS endpoint without any specified model is also possible. 
 
 
 
