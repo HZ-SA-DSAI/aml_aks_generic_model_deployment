@@ -85,7 +85,90 @@ SOFTWARE.
 There are two files that need to be modified to accommodate the onnx model
 
 1. **./main-generic.py**: This is essentially a scoring entry script that calls AML SDK, retrieve the model from the registry, and wrap it in a flask API. The original main-generic.py is a template, and you can add any relevant codes to execute the model in this file. Please replace the content of this file with **./sample_model/main-generic.py** (An example of how to customize this python script)
+    1. **./sample_model/main-generic.py** is an adapted version of the original MCW-Cognitive services and deep learning Claim Classification Jupyter Notebook. [Please see source here.](https://github.com/microsoft/MCW-Cognitive-services-and-deep-learning/blob/main/Hands-on%20lab/notebooks/03%20Claim%20Classification.ipynb)
 2. **./project_env.yml**: This specifies the dependencies required for the model to execute. Please replace the content of this file with **./sample_model/project_env.yml** (An example of how to customize this yml file)
+
+
+## Set up Build Pipeline
+
+
+1. Create a pipeline by using the classical editor. Select your Azure Repos Git as source. Then start with an empty job. 
+2. Change the agent specification as **ubuntu-18.04** (same for release pipeline as well)
+3. **Copy Files Activity**: Configure the activity based on the screenshot below
+    ![](media/3.png)
+4. **Docker-Build an Image**: Configure the activity based on the notes and screenshot below
+    1. Change task version to be 0.*
+    2. Select an Azure container registry, and authorize Azure Devops's Azure connection
+    3. In the "Docker File" section, select the **Dockerfile** in Azure Devops repo
+    4. Leave everything else as default
+    ![](media/4.png)
+    ![](media/5.png)
+5. **Docker-Push an Image**: Configure the activity based on the notes and screenshot below
+    1. Change task version to be 0.*
+    2. Select the same ACR as Build an Image step above
+    3. Leave everything else as default
+    ![](media/6.png)
+    ![](media/7.png)
+6. **Publish Build Artifact**: Leave everything as default
+    ![](media/8.png)
+7. Save and queue the build pipeline.
+
+
+## Set up Release Pipeline
+
+
+1. Start with an empty job
+2. Change Stage name to be AKS-Cluster-Release
+    ![](media/9.png)
+3. Add build artifact
+    ![](media/10.png)
+4. Set up continuous deployment trigger--the release pipeline will be automatically kicked off every time a build pipeline is modified
+    ![](media/11.png)
+5. **helm upgrade**: *Package and deploy helm charts* activity. 
+    1. Select an appropriate AKS cluster
+    2. Enter a custom namespace for this release. For this demo, the namespace is *aml-aks-onnx*
+    3. Command is "upgrade"
+    4. Chart type is "File path". Chart path is shown in the screenshot below
+    5. Set release name as *aml-aks-onnx-1*
+    6. Make sure to select **Install if not present** and **wait**
+    7. Go to your Azure Container Registry, and find Login server URL. Your Image repository path is LOGIN_SERVER_URL/REPOSITORY_NAME. 
+    7. In arguments, enter the following content:
+
+    `--create-namespace --set image.repository=IMAGE_REPOSITORY_PATH --set image.tag=$(Build.BuildId) --set amlargs.azureTenantId=$(TenantId) --set amlargs.azureSubscriptionId=$(SubscriptionId) --set amlargs.azureResourceGroupName=$(ResourceGroup) --set amlargs.azureMlWorkspaceName=$(WorkspaceName) --set amlargs.azureMlServicePrincipalClientId=$(ClientId) --set amlargs.azureMlServicePrincipalPassword=$(ClientSecret)`
+
+    ![](media/12.png)
+    ![](media/13.png)
+    ![](media/14.png)
+    ![](media/15.png)
+6. In Variables/Pipeline Variables, create and enter the following required values
+    1. ClientId: Follow [How to: Use the portal to create an Azure AD application and service principal that can access resources](https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal) to create a service principal that can access Azure ML workspace
+    2. ClientSecret: See the instruction for ClientId
+    3. ResourceGroup: Resource Group for AML workspace
+    4. SubscriptionId: Can be found on AML worksapce overview page. 
+    5. TenantId: Can be found in Azure Activate Directory
+    6. WorkspaceName: AML workspace name
+    
+    ![](media/16.png)
+7. Save, create, and deploy release
+    ![](media/17.png)
+    ![](media/18.png)
+
+
+## Testing
+
+
+1. Retrieve external IP for deployed service
+    1. Open powershell
+    2. `az account set --subscription SUBSCRIPTION_ID`
+    3. `az aks get-credentials --resource-group RESOURCE_GROUP_NAME --name AKS_CLUSTER_NAME`
+    4. `kubectl get deployments --all-namespaces=true`
+    5. Find the `aml-aks-onnx` namespace, make sure it's ready
+    6. `kubectl get deployments --namespace aml-aks-onnx`. External IP will be listed there
+2. Use [test.ipynb](test.ipynb) to test it out
+    1. endpoint is `http://EXTERNAL_IP:80/score`. You can optionally set it to be `http://EXTERNAL_IP:80/healthcheck` and then use the get method to do a quick health check
+    2. In the post method section, make sure to enter the model name. In this demo, the model name is claim_classifier_onnx_demo. Enter any potential insurance claim text, and see the model classifies it into auto or home insurance claim in real time. 
+    ![](media/19.png)
+    ![](media/20.png)
 
 ```python
 
