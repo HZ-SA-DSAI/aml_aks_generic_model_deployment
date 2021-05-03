@@ -39,7 +39,7 @@ This solution template helps enable the following use cases:
 ## Prerequisites
 
 1.  Review and complete all modules in [Azure Fundamentals](https://docs.microsoft.com/en-us/learn/paths/azure-fundamentals/) course.
-2.  An Azure **Resource Group** with **Owner** *Role* permission.  All Azure resources will be deloyed into this resource group.
+2.  An Azure **Resource Group** with **Owner** *Role* permission.  All Azure resources will be deployed into this resource group.
 3.  A **GitHub** Account to fork and clone this GitHub repository.
 4.  An **Azure DevOps Services** (formerly Visual Studio Team Services) Account.  You can get a free Azure DevOps account by accessing the [Azure DevOps Services](https://azure.microsoft.com/en-us/services/devops/) web page.
 5. An **Azure Machine Learning** workspace. AML is an enterprise-grade machine learning service to build and deploy models faster. In this project, you will use AML to register and retrieve models. 
