@@ -145,14 +145,14 @@ There are two files that need to be modified to accommodate the onnx model
 4. Set up continuous deployment trigger--the release pipeline will be automatically kicked off every time a build pipeline is modified
     ![](media/11.png)
 5. **helm upgrade**: *Package and deploy helm charts* activity. 
-    1. Select an appropriate AKS cluster
+    1. Select an appropriate AKS cluster. **When selecting the AKS cluster, ensure that AKS has access to the Azure Container Registry for Step 7, otherwise you will see a ImagePullBackOff error which results in timeout. You can also create a new AKS cluster through Azure Portal, and during the creation wizard process, associate your Azure Container Registry with the AKS cluster under the "Integration" tab.**
     2. Enter a custom namespace for this release. For this demo, the namespace is *aml-aks-onnx*
     3. Command is "upgrade"
     4. Chart type is "File path". Chart path is shown in the screenshot below
-    5. Set release name as *aml-aks-onnx-1*
+    5. Set release name as *aml-aks-onnx*
     6. Make sure to select **Install if not present** and **wait**
     7. Go to your Azure Container Registry, and find Login server URL. Your Image repository path is LOGIN_SERVER_URL/REPOSITORY_NAME. 
-    7. In arguments, enter the following content:
+    8. In arguments, enter the following content:
 
     `--create-namespace --set image.repository=IMAGE_REPOSITORY_PATH --set image.tag=$(Build.BuildId) --set amlargs.azureTenantId=$(TenantId) --set amlargs.azureSubscriptionId=$(SubscriptionId) --set amlargs.azureResourceGroupName=$(ResourceGroup) --set amlargs.azureMlWorkspaceName=$(WorkspaceName) --set amlargs.azureMlServicePrincipalClientId=$(ClientId) --set amlargs.azureMlServicePrincipalPassword=$(ClientSecret)`
 
